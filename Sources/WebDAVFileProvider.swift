@@ -321,7 +321,7 @@ open class WebDAVFileProvider: HTTPFileProvider, FileProviderSharing {
         })
     }
     
-    override func request(for operation: FileOperationType, overwrite: Bool = true, attributes: [URLResourceKey: Any] = [:]) -> URLRequest {
+    public override func request(for operation: FileOperationType, overwrite: Bool = true, attributes: [URLResourceKey: Any] = [:]) -> URLRequest {
         let method: String
         let url: URL
         let sourceURL = self.url(of: operation.source)

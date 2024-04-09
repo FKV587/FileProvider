@@ -56,7 +56,7 @@ extension CocoaError {
     }
 }
 
-extension URLError {
+public extension URLError {
     init(_ code: URLError.Code, url: URL?) {
         if let url = url {
             let userInfo: [String: Any] = [NSURLErrorKey: url,

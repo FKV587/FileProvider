@@ -375,7 +375,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
      In case you have to call super method asyncronously, create a `Progress` object and pass ot to `progress` parameter.
     */
     @discardableResult
-    internal func doOperation(_ operation: FileOperationType, overwrite: Bool = false, progress: Progress? = nil,
+    public func doOperation(_ operation: FileOperationType, overwrite: Bool = false, progress: Progress? = nil,
                               completionHandler: SimpleCompletionHandler) -> Progress? {
         guard fileOperationDelegate?.fileProvider(self, shouldDoOperation: operation) ?? true == true else {
             return nil
@@ -528,7 +528,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         task.resume()
     }
     
-    func upload(_ targetPath: String, request: URLRequest, stream: InputStream, size: Int64, operation: FileOperationType,
+    public func upload(_ targetPath: String, request: URLRequest, stream: InputStream, size: Int64, operation: FileOperationType,
                      completionHandler: SimpleCompletionHandler) -> Progress? {
         if size > maxUploadSimpleSupported {
             let error = self.serverError(with: .payloadTooLarge, path: targetPath, data: nil)
@@ -582,7 +582,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         return progress
     }
     
-    internal func download(path: String, request: URLRequest, operation: FileOperationType,
+    public func download(path: String, request: URLRequest, operation: FileOperationType,
                            responseHandler: ((_ response: URLResponse) -> Void)? = nil,
                            stream: OutputStream,
                            completionHandler: @escaping (_ error: Error?) -> Void) -> Progress? {
