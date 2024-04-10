@@ -183,6 +183,8 @@ final public class SessionDelegate: NSObject, URLSessionDataDelegate, URLSession
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        let progress = observeProgresses.first(where: { $0.task == task })?.progress
+        progress?.completedUnitCount = totalBytesSent
         guard let json = task.taskDescription?.deserializeJSON(),
               let op = FileOperationType(json: json), let fileProvider = fileProvider else {
             return
@@ -203,7 +205,6 @@ final public class SessionDelegate: NSObject, URLSessionDataDelegate, URLSession
         // wokaround for multipart uploading
         let uploadedBytes = (json["uploadedBytes"] as? Int64) ?? 0
         let totalBytes = (json["totalBytes"] as? Int64) ?? totalBytesExpectedToSend
-        
         fileProvider.delegateNotify(op, progress: Double(uploadedBytes + totalBytesSent) / Double(totalBytes))
     }
     
