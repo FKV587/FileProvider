@@ -251,6 +251,32 @@ public struct ContentMIMEType: RawRepresentable, Hashable, Equatable {
     static public let googleVideo = ContentMIMEType(rawValue: "application/vnd.google-apps.video")
 }
 
+public extension URLCredential {
+    func authorization(with type: URLRequest.AuthenticationType) -> String {
+        switch type {
+        case .basic:
+            let user = user?.replacingOccurrences(of: ":", with: "") ?? ""
+            let pass = password ?? ""
+            let authStr = "\(user):\(pass)"
+            if let base64Auth = authStr.data(using: .utf8)?.base64EncodedString() {
+                return "Basic \(base64Auth)"
+            }
+        case .digest:
+            // handled by RemoteSessionDelegate
+            break
+        case .oAuth1:
+            if let oauth = password {
+                return "OAuth \(oauth)"
+            }
+        case .oAuth2:
+            if let bearer = password {
+                return "Bearer \(bearer)"
+            }
+        }
+        return ""
+    }
+}
+
 internal extension URLRequest {
     mutating func setValue(authentication credential: URLCredential?, with type: AuthenticationType) {
         func base64(_ str: String) -> String {
